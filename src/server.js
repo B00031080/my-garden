@@ -1,5 +1,5 @@
 import sirv from 'sirv';
-import polka from 'polka';
+import express from 'express';
 import compression from 'compression';
 import * as sapper from '@sapper/server';
 const fs = require('fs');
@@ -9,14 +9,19 @@ const config = ini.parse(fs.readFileSync(__dirname+'/../../../secrets.ini', 'utf
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
+const app = express();
 
-polka() // You can also use Express
-	.use(
+app.get("/myson", (req,res)=>res.send("he is hungry."));
+
+app.use(
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),
 		sapper.middleware()
-	)
-	.listen(PORT, err => {
+	);
+
+
+
+app.listen(PORT, err => {
 		if (err) console.log('error', err);
 	});
 
